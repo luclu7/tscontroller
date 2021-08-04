@@ -65,8 +65,9 @@ def readInput():
                     rd.set_controller_value(keys["BPFC"], float(args["FC"]))
                     # rd.set_controller_value(keys["BPMV"], float(args[6].decode("utf-8")))
                     rd.set_controller_value(keys["BPVAL"], float(args["VAL"]))
-                    rd.set_controller_value(keys["FA"], float(args["FA"]))
-                    rd.set_controller_value(keys["GD"], float(args["BPGD"]))
+                    rd.set_controller_value(keys["BPSF"], float(args["SF&"]))
+                    #rd.set_controller_value(keys["FA"], float(args["FA"]))
+                    #rd.set_controller_value(keys["GD"], float(args["BPGD"]))
                 except ValueError as e:
                     print("ValueError", str(e), ligne)
                 except IndexError as e:
