@@ -1,11 +1,10 @@
 from serial import *
-import io
 import raildriver
 import argparse
 import os
-import configparser
 import json
 import threading
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("comport", help="selects which COM port to use to speak to the Arduino", default="COM46")
@@ -16,26 +15,11 @@ rd.set_rail_driver_connected(True)  # start data exchange
 loco_name = rd.get_loco_name()
 print(loco_name)
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-keys = config[loco_name[1]]
-
-
-class Object:
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-if False:
-    while True:
-        print("Force_control: " + str(
-            rd.get_current_controller_value("Force_control") + " BrakePipePressureBAR: " + str(
-            rd.get_current_controller_value("BrakePipePressureBAR")) + " TrainBrakeCylinderPressureBAR: " + str(
-            rd.get_current_controller_value("TrainBrakeCylinderPressureBAR"))))
-        time.sleep(1 / 2)
+if loco_name[1] != "AGC Globule":
+    print("Wrong script!")
+    os._exit(1)
 
 port_serie = Serial(port=args.comport, baudrate=115200, timeout=1, writeTimeout=1)
-
 
 def readInput():
     if port_serie.isOpen():
@@ -46,23 +30,18 @@ def readInput():
                 try:
                     args = json.loads(ligne)
                     print(args)
-                    textToPrint = ""
-                    # textToPrint += "Regulator: " + args[0].decode("utf-8")
-                    # textToPrint += "Reverser: " + args[1].decode("utf-8")
-                    # textToPrint += " VACMA: " + args[2].decode("utf-8")
 
-                    # print(textToPrint)
                     # rd.set_controller_value(keys["Regulator"], float(args[0]))
                     # rd.set_controller_value(keys["Reverser"], float(args[1]))
                     # rd.set_controller_value(keys["VACMA"], float(args[2].decode("utf-8")))
 
-                    rd.set_controller_value(keys["BPSF"], float(args["SF"]))
-                    rd.set_controller_value(keys["TEST"], float(args["TEST"]))
-                    rd.set_controller_value(keys["BPFC"], float(args["FC"]))
+                    rd.set_controller_value("BoutonKVBAnnulSF", float(args["SF"]))
+                    rd.set_controller_value("BoutKVBTest", float(args["TEST"]))
+                    rd.set_controller_value("KVBBoutFC", float(args["FC"]))
                     # rd.set_controller_value(keys["BPMV"], float(args[6].decode("utf-8")))
-                    rd.set_controller_value(keys["BPVAL"], float(args["VAL"]))
-                    rd.set_controller_value(keys["FA"], float(args["FA"]))
-                    rd.set_controller_value(keys["GD"], float(args["BPGD"]))
+                    #rd.set_controller_value(keys["BPVAL"], float(args["VAL"]))
+                    rd.set_controller_value("MPF", float(args["FA"]))
+
                 except ValueError as e:
                     print("ValueError", str(e), ligne)
                 except IndexError as e:
@@ -97,4 +76,4 @@ if loco_name is None:
     os._exit(1)
 
 threading.Thread(target=readInput).start()
-threading.Thread(target=writeOutput).start()
+#threading.Thread(target=writeOutput).start()

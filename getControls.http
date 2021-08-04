@@ -1,0 +1,17 @@
+# changes "Regulator" to a certain value
+POST http://localhost:5000/control/Regulator
+Content-Type: application/x-www-form-urlencoded
+
+value=0.8
+
+###
+# get the current value of the control "Reactor"
+GET http://localhost:5000/control/Regulator
+
+###
+# get the name of the current locomotive
+GET http://localhost:5000/locomotive/name
+
+###
+# get a list of every controls of the locomotive
+GET http://localhost:5000/locomotive/controls
