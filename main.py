@@ -28,11 +28,11 @@ class Object:
 
 if False:
     while True:
-        print("CG_control: " + str(
-            rd.get_current_controller_value("CG_control")) + " BrakePipePressureBAR: " + str(
+         print("Force_control: " + str(
+            rd.get_current_controller_value("Force_control")) + " BrakePipePressureBAR: " + str(
             rd.get_current_controller_value("BrakePipePressureBAR")) + " TrainBrakeCylinderPressureBAR: " + str(
             rd.get_current_controller_value("TrainBrakeCylinderPressureBAR")))
-        time.sleep(1 / 30)
+        time.sleep(1 / 2)
 
 port_serie = Serial(port=args.comport, baudrate=115200, timeout=1, writeTimeout=1)
 
@@ -61,19 +61,10 @@ def readInput():
                     rd.set_controller_value(keys["BPFC"], float(args["FC"]))
                     # rd.set_controller_value(keys["BPMV"], float(args[6].decode("utf-8")))
                     rd.set_controller_value(keys["BPVAL"], float(args["VAL"]))
-
-                    # if rd.get_current_controller_value("KVB_BP_VIO_lumiere_control") == 1.0:
-                    #    rd.set_controller_value("KVB_BP_VIO_ON_control", float(args[6].decode("utf-8")))
-                    # else:
-                    #    rd.set_controller_value("KVB_BP_VIO_off_control", float(args[6].decode("utf-8")))
-                    # print("KVB_LS_V_control: " + str(
-                    #        rd.get_current_controller_value("KVB_LS_V_control")) + " KVB_LS_FU_control: " + str(
-                    #        rd.get_current_controller_value("KVB_LS_FU_control")) + " KVB_BP_VIO_lumiere_control: " + str(
-                    #        rd.get_current_controller_value("KVB_BP_VIO_lumiere_control")))
-                    # print(str.encode('{"visu":' +  + '}\n'))
+                    rd.set_controller_value(keys["FA"], float(args["FA"]))
+                    rd.set_controller_value(keys["GD"], float(args["BPGD"]))
                 except ValueError as e:
-                    print("ValueError", str(e))
-                    print(ligne)
+                    print("ValueError", str(e), ligne)
                 except IndexError as e:
                     print("IndexError")
                     print(e)
@@ -107,9 +98,3 @@ if loco_name is None:
 
 threading.Thread(target=readInput).start()
 threading.Thread(target=writeOutput).start()
-
-
-print(dict(rd.get_controller_list()).values())
-
-print(rd.get_current_controller_value("KVB_potar_control"))
-print()
