@@ -1,5 +1,4 @@
 from serial import *
-import io
 import raildriver
 import argparse
 import os
@@ -18,7 +17,12 @@ print(loco_name)
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-keys = config[loco_name[1]]
+try:
+    keys = config[loco_name[1]]
+except TypeError as e:
+    print(e)
+    print("Is train Simulator running correctly?")
+    os._exit(1)
 
 
 class Object:
