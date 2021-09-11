@@ -65,7 +65,7 @@ def readInput():
                     rd.set_controller_value(keys["BPFC"], float(args["FC"]))
                     # rd.set_controller_value(keys["BPMV"], float(args[6].decode("utf-8")))
                     rd.set_controller_value(keys["BPVAL"], float(args["VAL"]))
-                    rd.set_controller_value(keys["BPSF"], float(args["SF&"]))
+                    rd.set_controller_value(keys["BPSF"], float(args["SF"]))
                     #rd.set_controller_value(keys["FA"], float(args["FA"]))
                     #rd.set_controller_value(keys["GD"], float(args["BPGD"]))
                 except ValueError as e:
@@ -88,6 +88,8 @@ def writeOutput():
             dataToBeSent.LSV = str(int(rd.get_current_controller_value("KVB_LS_V_control")))
             dataToBeSent.FC = str(int(rd.get_current_controller_value("KVB_BP_CAR_lumiere_control")))
             dataToBeSent.VAL = str(int(rd.get_current_controller_value("KVB_BP_VAL_lumiere_control")))
+            dataToBeSent.LSSF = str(int(rd.get_current_controller_value("KVB_LS_SF_control")))
+
 
             data = dataToBeSent.toJSON()
             # {"visu":7, "autotest":4,"LSFU":1,"ENGIN":1, "LSV": 1, "SOL": 1}
